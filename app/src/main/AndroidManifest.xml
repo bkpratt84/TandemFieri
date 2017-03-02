@@ -41,6 +41,12 @@
         <activity android:name=".RestaurantMapActivity" />
         <activity android:name=".EditAccountActivity" />
         <activity android:name=".EditPasswordActivity" />
+        <activity
+            android:name=".DinerMapActivity"
+            android:label="@string/title_activity_diner_map" />
+        <activity android:name=".ManageRestaurantDrivers" />
+        <activity android:name=".EditRestaurantActivity" />
+        <activity android:name=".FakePayment" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -48,17 +54,9 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <service
             android:name=".Utility.FetchAddressIntentService"
-            android:exported="false"/>
-
-        <activity
-            android:name=".DinerMapActivity"
-            android:label="@string/title_activity_diner_map"/>
-
-        <activity android:name=".ManageRestaurantDrivers" />
-        <activity android:name=".EditRestaurantActivity"/>
-
+            android:exported="false" />
     </application>
-
 </manifest>

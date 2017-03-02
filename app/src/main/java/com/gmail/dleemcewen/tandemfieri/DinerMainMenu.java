@@ -1,16 +1,11 @@
 package com.gmail.dleemcewen.tandemfieri;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.gmail.dleemcewen.tandemfieri.Entities.User;
 import com.gmail.dleemcewen.tandemfieri.Logging.LogWriter;
@@ -58,6 +53,15 @@ public class DinerMainMenu extends AppCompatActivity {
                 return true;
             case R.id.map:
                 launchMap();
+                return true;
+            case R.id.payment:
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("User", user);
+
+                Intent intent = new Intent(DinerMainMenu.this, FakePayment.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
