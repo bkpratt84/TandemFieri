@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,9 +36,9 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import java.util.AbstractMap;
 import org.json.JSONObject;
 
+import java.util.AbstractMap;
 import java.util.logging.Level;
 
 import cz.msebera.android.httpclient.Header;
@@ -179,17 +178,15 @@ public class MainActivity extends AppCompatActivity {
                                     .child("braintreeId")
                                     .setValue(customer.customerID);
 
-                            Log.v("Braintree", "CreateCustomerCustomerID: " + customer.customerID);
+                            LogWriter.log(getApplicationContext(), Level.FINEST, "CreateCustomerCustomerID: " + customer.customerID);
                         }
 
-                        //LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeClientToken: " + token);
-                        Log.v("Braintree", "CreateCustomerResult: " + customer.success);
+                        LogWriter.log(getApplicationContext(), Level.FINEST, "CreateCustomerResult: " + customer.success);
                     }
 
                     @Override
                     public void onFailure(int status, Header[] headers, String res, Throwable t) {
-                        //LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeClientTokenRequestFailed: " + t.getMessage());
-                        Log.v("Braintree", "CreateCustomerFailure: " + t.getMessage());
+                        LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeCreateCustomerFailed: " + t.getMessage());
                     }
                 });
         //End rest api
@@ -219,18 +216,16 @@ public class MainActivity extends AppCompatActivity {
 
                         if (token.status.equals("true")) {
                             BraintreeUtil.setClientToken(getApplicationContext(), token.token);
-                            Log.v("Braintree", "BraintreeClientToken: " + token.token);
-                        } else {
-                            Log.v("Braintree", "BraintreeClientTokenRequestFailed: customer does not exist");
-                        }
 
-                        //LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeClientToken: " + token);
+                            LogWriter.log(getApplicationContext(), Level.FINEST, "BraintreeClientToken: " + token.token);
+                        } else {
+                            LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeClientTokenRequestFailed: customer does not exist");
+                        }
                     }
 
                     @Override
                     public void onFailure(int status, Header[] headers, String res, Throwable t) {
-                        //LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeClientTokenRequestFailed: " + t.getMessage());
-                        Log.v("Braintree", "BraintreeClientTokenRequestFailed: " + t.getMessage());
+                        LogWriter.log(getApplicationContext(), Level.WARNING, "BraintreeClientTokenRequestFailed: " + t.getMessage());
                     }
                 });
         //End rest api
