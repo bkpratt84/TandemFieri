@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -56,6 +57,9 @@ public class FakePayment extends AppCompatActivity {
             public void onClick(View view) {
                 Context context = getApplicationContext();
                 String token = BraintreeUtil.getClientToken(context);
+
+                Log.v("BRAINTREE DEBUG", "TOKEN PRE DROPIN: " + token);  //REMOVE ME, TESTING ONLY
+
                 DropInRequest request = new DropInRequest().clientToken(token);
 
                 startActivityForResult(request.getIntent(context), PAYMENT);
@@ -82,6 +86,7 @@ public class FakePayment extends AppCompatActivity {
                 DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
                 nonce = new Nonce(result.getPaymentMethodNonce().getNonce());
 
+                Log.v("BRAINTREE DEBUG", "NONCE: " + nonce.getNonce());  //REMOVE ME, TESTING ONLY
                 LogWriter.log(getApplicationContext(), Level.WARNING, "Nounce: " + result.getPaymentMethodNonce().getNonce());
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 LogWriter.log(getApplicationContext(), Level.WARNING, "Canceled");
@@ -95,6 +100,8 @@ public class FakePayment extends AppCompatActivity {
     public void submitPayment() {
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
+
+        Log.v("BRAINTREE DEBUG", "Payment - Cust ID: " + diner.getBraintreeId());  //REMOVE ME, TESTING ONLY
 
         params.put("customerID", diner.getBraintreeId());
         params.put("amount", "15.23");

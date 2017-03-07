@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -198,10 +199,10 @@ public class MainActivity extends AppCompatActivity {
 
         params.put("customerID", customerID);
 
-        String url = getString(R.string.braintreeBaseURL);
+        String url = getString(R.string.braintreeBaseURL) + "generatetoken";
 
         //Start rest api
-        client.get(this
+        client.post(this
                 ,url
                 ,params
                 ,new JsonHttpResponseHandler() {
@@ -215,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
                         ClientToken token = gson.fromJson(json, ClientToken.class);
 
                         if (token.status.equals("true")) {
+                            Log.v("BRAINTREE DEBUG", "TOKEN: " + token.token);  //REMOVE ME, TESTING ONLY
+                            Log.v("BRAINTREE DEBUG", "CUST ID: " + token.customerID);  //REMOVE ME, TESTING ONLY
                             BraintreeUtil.setClientToken(getApplicationContext(), token.token);
 
                             LogWriter.log(getApplicationContext(), Level.FINEST, "BraintreeClientToken: " + token.token);
@@ -248,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
             if (diner.getBraintreeId() == null || diner.getBraintreeId().equals("")) {
                 createBraintreeCustomer(diner);
             } else {
+                Log.v("BRAINTREE DEBUG", "CUS ID FROM MENU: " + diner.getBraintreeId());  //REMOVE ME, TESTING ONLY
                 requestBraintreeClientToken(diner.getBraintreeId());
             }
         }else if(driver != null){
