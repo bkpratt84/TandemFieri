@@ -20,12 +20,33 @@ public class Order extends Entity implements Serializable {
     private OrderEnum status;
     private String restaurantId;
     private String customerId;
+
+
+    private String latitude;
+    private String longitude;
     private double subTotal;
     private double tax;
     private double total;
     private double deliveryCharge;
     private String restaurantName, OrderId;
     private Date orderDate;
+
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
 
     public Order() {orderDate = new Date();}

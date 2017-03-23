@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.gmail.dleemcewen.tandemfieri.Adapters.RestaurantMainMenuExpandableListAdapter;
 import com.gmail.dleemcewen.tandemfieri.Entities.NotificationMessage;
@@ -180,17 +179,6 @@ public class RestaurantMainMenu extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    /***********************UPDATE LIST WITH ORDERS********************************/
-   /* @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ((requestCode == CREATE_RESTAURANT || requestCode == UPDATE_RESTAURANT)
-                && resultCode == RESULT_OK) {
-            //A new restaurant was added or a restaurant was updated
-            retrieveData();
-        }
-    }*/
-/********** CALL DATABASE TO COLLECT ORDERS***************************/
    private void retrieveData() {
         //find all the orders where the restaurantid matches the current user id
         //Order table: userID -> order# -> order entity
@@ -202,9 +190,9 @@ public class RestaurantMainMenu extends AppCompatActivity {
                     public void onDataChange(DataSnapshot orderSnapshot) {
                         List<Order> orderEntities = new ArrayList<Order>();
                         List<Order> orderAssigned = new ArrayList<Order>();
-                        Toast.makeText(context, "this is the list the user id pulls up: " + orderSnapshot.getKey(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(context, "this is the list the user id pulls up: " + orderSnapshot.getKey(), Toast.LENGTH_LONG).show();
                         for(DataSnapshot orders: orderSnapshot.getChildren()){
-                            Toast.makeText(context, "outer loop: " + orders.getKey(), Toast.LENGTH_LONG).show();//this gives me the order id
+                            //Toast.makeText(context, "outer loop: " + orders.getKey(), Toast.LENGTH_LONG).show();//this gives me the order id
 
                             Order order = orders.getValue(Order.class);
 
@@ -214,7 +202,6 @@ public class RestaurantMainMenu extends AppCompatActivity {
                                 }else {
                                     orderEntities.add(order);
                                 }
-                                //Toast.makeText((Activity)context, "innner loop: " + order.getCustomerId(), Toast.LENGTH_SHORT).show();
                             }
                             if(orderEntities.isEmpty()&&orderAssigned.isEmpty()){
                                 //Toast.makeText(getApplicationContext(), "There are no orders on file.", Toast.LENGTH_LONG).show();
@@ -249,12 +236,11 @@ public class RestaurantMainMenu extends AppCompatActivity {
         return childData;
     }
 
-    //@Override
-   /* public void onResume() {
+    @Override
+    public void onResume() {
         super.onResume();  // Always call the superclass method first
 
-        //retrieveData();
-    }*/
-
+        retrieveData();
+    }
 
 }//end Activity
