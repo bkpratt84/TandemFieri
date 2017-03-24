@@ -21,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -164,14 +163,6 @@ public class DinerMainMenu extends AppCompatActivity {
                 return true;
             case R.id.order_history:
                 displayOrderHistory();
-                return true;
-            case R.id.payment:
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("User", user);
-                Intent intent = new Intent(DinerMainMenu.this, FakePayment.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-
                 return true;
             case R.id.rateRestaurant:
                 rateRestaurant();
