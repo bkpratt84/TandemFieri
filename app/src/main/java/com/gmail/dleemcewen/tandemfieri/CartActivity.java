@@ -121,6 +121,8 @@ public class CartActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_CANCELED, returnIntent);
                 finish();
             }
         });
@@ -220,7 +222,7 @@ public class CartActivity extends AppCompatActivity {
 
                         if (checkout.success.equals("true")) {
                             order.setBraintreeTransactionId(checkout.transactionID);
-                            order.setStatus(OrderEnum.RECEIVED);
+                            order.setStatus(OrderEnum.CREATING);
                             mDatabase.child("Order").child(ownerId).child(order.getKey()).setValue(order);
 
                             Toast.makeText(getApplicationContext(),
@@ -295,26 +297,10 @@ public class CartActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            order = (Order) savedInstanceState.getSerializable("previousItems");
-            Toast.makeText(getApplicationContext(), "restored", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            Toast.makeText(getApplicationContext(), "restored but null", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     public void onBackPressed() {
-        // TODO: figure out how to save order when going back to menu.
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("order", order);
+        setResult(Activity.RESULT_OK, returnIntent);
         super.onBackPressed();
     }
 

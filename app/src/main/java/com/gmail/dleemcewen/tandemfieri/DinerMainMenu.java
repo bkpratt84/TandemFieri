@@ -60,6 +60,7 @@ import java.util.logging.Level;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.os.Build.VERSION_CODES.M;
 import static com.gmail.dleemcewen.tandemfieri.DinerMapActivity.MY_PERMISSIONS_REQUEST_LOCATION;
+import static com.paypal.android.sdk.onetouch.core.metadata.ah.t;
 
 public class DinerMainMenu extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener {
     protected static final String TAG = "DinerMainMenu";
@@ -73,6 +74,7 @@ public class DinerMainMenu extends AppCompatActivity implements ConnectionCallba
     List<Restaurant> restaurantsList;
     DatabaseReference mDatabase;
     static MenuItem deliveryOption;
+    private String controlString;
 
     protected GoogleApiClient mMap;
     protected Location mLastLocation;
@@ -160,17 +162,23 @@ public class DinerMainMenu extends AppCompatActivity implements ConnectionCallba
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                openMenu((Restaurant) parent.getItemAtPosition(position));
+                    TextView textView = (TextView) view.findViewById(R.id.restaurant_openclosed);
+                    controlString = textView.getText().toString();
+
+                    openMenu((Restaurant) parent.getItemAtPosition(position), controlString);
             }
         });
 
         verifyLocationSettings();
     }
 
-    private void openMenu(Restaurant r){
+    private void openMenu(Restaurant r, String controlString){
+
         Bundle restaurantBundle = new Bundle();
         Intent intent = new Intent(DinerMainMenu.this, LookAtMenuActivity.class);
         restaurantBundle.putSerializable("Restaurant", r);
+        restaurantBundle.putString("OpenClosed", controlString);
+        restaurantBundle.putSerializable("User", user);
         intent.putExtras(restaurantBundle);
         startActivity(intent);
     }
@@ -262,6 +270,7 @@ public class DinerMainMenu extends AppCompatActivity implements ConnectionCallba
         Intent intent = new Intent(DinerMainMenu.this, DinerMapActivity.class);
         Bundle userBundle = new Bundle();
         userBundle.putSerializable("User", user);
+        userBundle.putString("OpenClosed", controlString);
         intent.putExtras(userBundle);
         startActivity(intent);
     }
@@ -573,5 +582,14 @@ public class DinerMainMenu extends AppCompatActivity implements ConnectionCallba
                 .build();
 
         mMap.connect();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if(!restaurantsList.isEmpty()){
+            restaurantsList.clear();
+            retrieveData();
+        }
     }
 }//end Activity
