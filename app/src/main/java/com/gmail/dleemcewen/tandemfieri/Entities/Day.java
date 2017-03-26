@@ -106,6 +106,7 @@ public class Day {
     @Exclude
     public boolean compareOpenTimeWithCurrentTime(int hourOpen, Date currentDate) {
         int currentMilitaryTime = DateFormatter.convertStandardTimeToMilitaryTime(currentDate);
+
         return currentMilitaryTime > hourOpen;
     }
 
