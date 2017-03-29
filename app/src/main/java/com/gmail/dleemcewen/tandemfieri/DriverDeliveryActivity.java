@@ -24,11 +24,15 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
+import com.gmail.dleemcewen.tandemfieri.Constants.NotificationConstants;
+import com.gmail.dleemcewen.tandemfieri.Entities.NotificationMessage;
 import com.gmail.dleemcewen.tandemfieri.Entities.Order;
 import com.gmail.dleemcewen.tandemfieri.Entities.OrderItem;
 import com.gmail.dleemcewen.tandemfieri.Entities.User;
 import com.gmail.dleemcewen.tandemfieri.Enums.OrderEnum;
 import com.gmail.dleemcewen.tandemfieri.Utility.General;
+import com.gmail.dleemcewen.tandemfieri.Json.AddressGeocode.AddressGeocode;
+import com.gmail.dleemcewen.tandemfieri.Repositories.NotificationMessages;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -72,6 +76,7 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
     private BootstrapButton navigateButton, completeButton, cancelButton;
     private TextView subTotal, tax, total, restaurantName, orderDate;
     private ListView viewOrderItems;
+    private NotificationMessages<NotificationMessage> notifications;
 
     private String customerID, ownerId;
     private Double lat, lon;
@@ -85,6 +90,8 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_delivery);
 
+        notifications = new NotificationMessages<>(DriverDeliveryActivity.this);
+      
         buildGoogleApiClient();
         createLocationRequest();
         buildLocationSettingsRequest();
@@ -136,13 +143,11 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
             stopLocationUpdates();
         }
     }
-
     @Override
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
     }
-
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -315,6 +320,17 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
                     completeOrderDialog();
                 } else {
                     Toast.makeText(getApplicationContext(), "You are not there yet", Toast.LENGTH_LONG).show();
+                }else {
+                    mDatabaseRemoval.child("Delivery").child(user.getAuthUserID()).child("Order").child(order.getCustomerId()).child(order.getOrderId()).removeValue();
+                    mDatabaseRemoval.child("Delivery").child(user.getAuthUserID()).child("currentOrderId").removeValue();
+                    mDatabaseRemoval.child("Delivery Location").child(order.getCustomerId()).child("Latitude").removeValue();
+                    mDatabaseRemoval.child("Delivery Location").child(order.getCustomerId()).child("Longitude").removeValue();
+                    mDatabaseRemoval.child("Order").child(ownerId).child(order.getOrderId()).child("status").setValue(OrderEnum.COMPLETE);
+                    finish();
+                    Toast.makeText(getApplicationContext(), "Finish the delivery yah dingus", Toast.LENGTH_LONG).show();
+
+                    //send notification to diner for driver rating
+                    sendNotificationToDiner(order, user);
                 }
             }
         });
@@ -442,5 +458,19 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        if (isLocationEnabled(getApplicationContext()) == false){
+            finish();
+            Toast.makeText(getApplicationContext(),"Location services must be turned on", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void sendNotificationToDiner(Order order, User user) {
+        order.setStatus(OrderEnum.COMPLETE);
+        notifications.sendNotification(NotificationConstants.Action.ADDED, order, user.getAuthUserID());
     }
 }
