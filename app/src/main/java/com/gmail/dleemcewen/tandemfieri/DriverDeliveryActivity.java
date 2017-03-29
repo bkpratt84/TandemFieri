@@ -320,17 +320,6 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
                     completeOrderDialog();
                 } else {
                     Toast.makeText(getApplicationContext(), "You are not there yet", Toast.LENGTH_LONG).show();
-                }else {
-                    mDatabaseRemoval.child("Delivery").child(user.getAuthUserID()).child("Order").child(order.getCustomerId()).child(order.getOrderId()).removeValue();
-                    mDatabaseRemoval.child("Delivery").child(user.getAuthUserID()).child("currentOrderId").removeValue();
-                    mDatabaseRemoval.child("Delivery Location").child(order.getCustomerId()).child("Latitude").removeValue();
-                    mDatabaseRemoval.child("Delivery Location").child(order.getCustomerId()).child("Longitude").removeValue();
-                    mDatabaseRemoval.child("Order").child(ownerId).child(order.getOrderId()).child("status").setValue(OrderEnum.COMPLETE);
-                    finish();
-                    Toast.makeText(getApplicationContext(), "Finish the delivery yah dingus", Toast.LENGTH_LONG).show();
-
-                    //send notification to diner for driver rating
-                    sendNotificationToDiner(order, user);
                 }
             }
         });
@@ -444,6 +433,9 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
                                 mDatabase.child("Delivery").child(user.getAuthUserID()).child("currentOrderId").removeValue();
                                 mDatabase.child("Delivery Location").child(order.getCustomerId()).removeValue();
                                 mDatabase.child("Order").child(ownerId).child(order.getOrderId()).setValue(order);
+
+                                //send notification to diner for driver rating
+                                sendNotificationToDiner(order, user);
 
                                 finish();
                                 Toast.makeText(getApplicationContext(), "Order completed.", Toast.LENGTH_LONG).show();
