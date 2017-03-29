@@ -452,15 +452,6 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
         alertDialog.show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
-        if (isLocationEnabled(getApplicationContext()) == false){
-            finish();
-            Toast.makeText(getApplicationContext(),"Location services must be turned on", Toast.LENGTH_LONG).show();
-        }
-    }
-
     private void sendNotificationToDiner(Order order, User user) {
         order.setStatus(OrderEnum.COMPLETE);
         notifications.sendNotification(NotificationConstants.Action.ADDED, order, user.getAuthUserID());
