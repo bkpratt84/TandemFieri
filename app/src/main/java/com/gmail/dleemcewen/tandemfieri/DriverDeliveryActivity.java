@@ -140,7 +140,6 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
             stopLocationUpdates();
         }
     }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -434,6 +433,7 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
 
                                 //send notification to diner for driver rating
                                 sendNotificationToDiner(order, user);
+
                                 finish();
                                 Toast.makeText(getApplicationContext(), "Order completed.", Toast.LENGTH_LONG).show();
                             }
