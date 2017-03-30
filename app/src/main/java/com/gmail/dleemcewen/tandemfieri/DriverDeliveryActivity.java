@@ -22,11 +22,14 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
+import com.gmail.dleemcewen.tandemfieri.Constants.NotificationConstants;
+import com.gmail.dleemcewen.tandemfieri.Entities.NotificationMessage;
 import com.gmail.dleemcewen.tandemfieri.Entities.Order;
 import com.gmail.dleemcewen.tandemfieri.Entities.OrderItem;
 import com.gmail.dleemcewen.tandemfieri.Entities.User;
 import com.gmail.dleemcewen.tandemfieri.Enums.OrderEnum;
 import com.gmail.dleemcewen.tandemfieri.Utility.General;
+import com.gmail.dleemcewen.tandemfieri.Repositories.NotificationMessages;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -70,6 +73,7 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
     private BootstrapButton navigateButton, completeButton, cancelButton;
     private TextView subTotal, tax, total, restaurantName, orderDate;
     private ListView viewOrderItems;
+    private NotificationMessages<NotificationMessage> notifications;
 
     private String customerID, ownerId;
     private Double lat, lon;
@@ -83,6 +87,8 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_delivery);
 
+        notifications = new NotificationMessages<>(DriverDeliveryActivity.this);
+      
         buildGoogleApiClient();
         createLocationRequest();
         buildLocationSettingsRequest();
@@ -140,7 +146,6 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
         super.onStop();
         mGoogleApiClient.disconnect();
     }
-
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -427,6 +432,8 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
                                 mDatabase.child("Delivery Location").child(order.getCustomerId()).removeValue();
                                 mDatabase.child("Order").child(ownerId).child(order.getOrderId()).setValue(order);
 
+                                //send notification to diner for driver rating
+                                sendNotificationToDiner(order, user);
                                 finish();
                                 Toast.makeText(getApplicationContext(), "Order completed.", Toast.LENGTH_LONG).show();
                             }
@@ -440,5 +447,10 @@ public class DriverDeliveryActivity extends AppCompatActivity implements
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private void sendNotificationToDiner(Order order, User user) {
+        order.setStatus(OrderEnum.COMPLETE);
+        notifications.sendNotification(NotificationConstants.Action.ADDED, order, user.getAuthUserID());
     }
 }

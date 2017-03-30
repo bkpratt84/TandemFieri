@@ -68,24 +68,29 @@ public class RestaurantMainMenu extends AppCompatActivity {
         assignedOrderList = (ExpandableListView)findViewById(R.id.order_list_assigned);
         //header = (TextView) findViewById(R.id.header);
 
-        int notificationId = bundle.getInt("notificationId");
+        final int notificationId = bundle.getInt("notificationId");
         if (notificationId != 0) {
             NotificationManager notificationManager =
                     (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
 
             notificationManager.cancel(notificationId);
 
-            notificationsRepository
-                .find("notificationId = '" + notificationId + "'")
-                .addOnCompleteListener(RestaurantMainMenu.this, new OnCompleteListener<TaskResult<NotificationMessage>>() {
-                    @Override
-                    public void onComplete(@NonNull Task<TaskResult<NotificationMessage>> task) {
-                        List<NotificationMessage> messages = task.getResult().getResults();
-                        if (!messages.isEmpty()) {
-                            notificationsRepository.remove(messages.get(0));
-                        }
-                    }
-                });
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    notificationsRepository
+                        .find("notificationId = '" + notificationId + "'")
+                        .addOnCompleteListener(RestaurantMainMenu.this, new OnCompleteListener<TaskResult<NotificationMessage>>() {
+                            @Override
+                            public void onComplete(@NonNull Task<TaskResult<NotificationMessage>> task) {
+                                List<NotificationMessage> messages = task.getResult().getResults();
+                                if (!messages.isEmpty()) {
+                                    notificationsRepository.remove(messages.get(0));
+                                }
+                            }
+                        });
+                }
+            }).start();
         }//end notification block
 
         retrieveData();
@@ -96,16 +101,11 @@ public class RestaurantMainMenu extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (notificationsRepository == null) {
-            notificationsRepository = new NotificationMessages<>(RestaurantMainMenu.this);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        notificationsRepository.finalize();
-        notificationsRepository = null;
     }
 
     @Override

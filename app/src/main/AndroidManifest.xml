@@ -38,7 +38,15 @@
                 android:value="com.gmail.dleemcewen.tandemfieri.MainActivity" />
         </activity>
         <activity android:name=".RestaurantMainMenu" />
-        <activity android:name=".DriverMainMenu" />
+        <activity
+            android:name=".DriverMainMenu"
+            android:parentActivityName=".MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gmail.dleemcewen.tandemfieri.MainActivity" />
+        </activity>
         <activity android:name=".CreateRestaurant" />
         <activity android:name=".CreateDeliveryHoursActivity" />
         <activity android:name=".menubuilder.MenuBuilderActivity" />
@@ -85,6 +93,8 @@
         <activity android:name=".DinerOrderHistoryActivity" />
         <activity android:name=".ViewOrderActivity" />
         <activity android:name=".ProductHistoryActivity" />
+        <activity android:name=".CompetedOrdersDriverActivity"></activity>
+
     </application>
 
 </manifest>
