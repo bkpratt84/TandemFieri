@@ -77,7 +77,6 @@
         android:layout_below="@+id/material_text2"
         android:layout_centerHorizontal="true"
         android:layout_margin="30dp"
-
         android:id="@+id/signInButton" />
 
     <TextView
