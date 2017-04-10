@@ -61,7 +61,7 @@
     <string name="removeConfirmationQuestion">Are you sure you want to remove</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="close">Close</string>
@@ -92,9 +92,7 @@
     <string name="delivery_comments">Delivery Comments</string>
     <string name="complete_delivery">Complete Delivery?</string>
     <string name="comment_not_required">Comment not required</string>
-    <string name="comment_required">Comment required</string>
     <string name="refund_order">Refund Order</string>
     <string name="change_status">Change Status</string>
     <string name="confirm_refund">Are your sure you want to refund this order?</string>
-    <string name="refund_reason">Reason for the refund</string>
 </resources>
