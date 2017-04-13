@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.gmail.dleemcewen.tandemfieri.Adapters.MonthlyReportAdapter;
 import com.gmail.dleemcewen.tandemfieri.Adapters.MonthlyReportArrayAdapter;
 import com.gmail.dleemcewen.tandemfieri.Entities.DisplayItem;
 import com.gmail.dleemcewen.tandemfieri.Entities.Order;
@@ -158,8 +159,11 @@ public class ViewMonthlyReportActivity extends AppCompatActivity {
                         restaurantNamesList.add(order.getRestaurantName());
                     }
                 }
-                restaurantAdapter = new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_list_item_multiple_choice, restaurantNamesList);
+//                restaurantAdapter = new ArrayAdapter<String>(getApplicationContext(),
+//                        android.R.layout.simple_list_item_multiple_choice, restaurantNamesList);
+                restaurantAdapter = new MonthlyReportAdapter(getApplicationContext(),
+                        android.R.layout.simple_list_item_multiple_choice,
+                        restaurantNamesList);
                 restaurantListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                 restaurantListView.setAdapter(restaurantAdapter);
                 restaurantListView.setVisibility(View.VISIBLE);
